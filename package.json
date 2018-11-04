@@ -1,0 +1,12 @@
+{
+  "name": "troubleshooting",
+  "description": "",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "@types/jest": "^23.0.0"
+  },
+  "keywords": [],
+  "dependencies": {
+    "ramda": "0.25.0"
+  }
+}
