@@ -44,7 +44,7 @@ const ProblemSolverActual: ProblemSolver = {
     }));
     return {
       rootCauses: initialRootCauses,
-      alreadyAnswered: [],
+      previouslyAnswered: [],
       questions: questions
     };
   },
@@ -52,17 +52,20 @@ const ProblemSolverActual: ProblemSolver = {
   answer(input) {
     const data = getSetupData();
 
-    const alreadyAnswered = [...input.alreadyAnswered, input.thisAnswer];
+    const previouslyAnswered = [
+      ...input.previouslyAnswered,
+      { question: input.question, answer: input.answer }
+    ];
     const allQuestions = Object.keys(data.questionsAndLikelihood);
     const remainingQuestions = allQuestions.filter(
       x =>
-        x !== input.thisAnswer.question &&
-        !input.alreadyAnswered.map(y => y.question).includes(x)
+        x !== input.question &&
+        !input.previouslyAnswered.map(y => y.question).includes(x)
     );
 
     // build score matrix
     const scores = allQuestions.reduce((acc, q) => {
-      const answer = alreadyAnswered.find(a => a.question === q);
+      const answer = previouslyAnswered.find(a => a.question === q);
       return {
         ...acc,
         [q]: data.questionsAndLikelihood[q].map(
@@ -87,7 +90,7 @@ const ProblemSolverActual: ProblemSolver = {
 
     return {
       rootCauses: rootCauses,
-      alreadyAnswered: alreadyAnswered,
+      previouslyAnswered: previouslyAnswered,
       questions: remainingQuestions
     };
   }

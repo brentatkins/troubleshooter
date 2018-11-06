@@ -16,7 +16,7 @@ describe("Problem solver", () => {
 
     it("should not have anything already answered", () => {
       const result = ProblemSolverActual.start();
-      expect(result.alreadyAnswered).toHaveLength(0);
+      expect(result.previouslyAnswered).toHaveLength(0);
     });
   });
 
@@ -25,24 +25,24 @@ describe("Problem solver", () => {
       const startResult = ProblemSolverActual.start();
       const question = startResult.questions[0];
       const answer: Answer = "Yes";
-      const thisAnswer = { question, answer };
       const actual = ProblemSolverActual.answer({
-        alreadyAnswered: [],
-        thisAnswer
+        previouslyAnswered: [],
+        question,
+        answer
       });
 
-      expect(actual.alreadyAnswered).toHaveLength(1);
-      expect(actual.alreadyAnswered[0]).toEqual({ question, answer });
+      expect(actual.previouslyAnswered).toHaveLength(1);
+      expect(actual.previouslyAnswered[0]).toEqual({ question, answer });
     });
 
     it("should not include the question in the list of remaining questions", () => {
       const startResult = ProblemSolverActual.start();
       const question = startResult.questions[0];
       const answer: Answer = "Yes";
-      const thisAnswer = { question, answer };
       const actual = ProblemSolverActual.answer({
-        alreadyAnswered: [],
-        thisAnswer
+        previouslyAnswered: [],
+        question,
+        answer
       });
 
       expect(actual.questions).toHaveLength(9);
@@ -53,12 +53,14 @@ describe("Problem solver", () => {
       const startResult = ProblemSolverActual.start();
       const answer: Answer = "Yes";
       const result1 = ProblemSolverActual.answer({
-        alreadyAnswered: [],
-        thisAnswer: { question: startResult.questions[0], answer }
+        previouslyAnswered: [],
+        question: startResult.questions[0],
+        answer
       });
       const result2 = ProblemSolverActual.answer({
-        alreadyAnswered: result1.alreadyAnswered,
-        thisAnswer: { question: result1.questions[0], answer }
+        previouslyAnswered: result1.previouslyAnswered,
+        question: result1.questions[0],
+        answer
       });
 
       expect(result2.questions).not.toContain(startResult.questions[0]);
@@ -70,8 +72,9 @@ describe("Problem solver", () => {
       const startResult = ProblemSolverActual.start();
       const answer: Answer = "Yes";
       const result = ProblemSolverActual.answer({
-        alreadyAnswered: [],
-        thisAnswer: { question: startResult.questions[0], answer }
+        previouslyAnswered: [],
+        question: startResult.questions[0],
+        answer
       });
 
       expect(result.rootCauses).toHaveLength(6);

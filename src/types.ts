@@ -5,20 +5,21 @@ type RootCause = {
   likelihood: number;
 };
 
-type AnswerToQuestion = {
+type AnsweredQuestion = {
   question: Question;
   answer: Answer;
 };
 
 type ProblemSolverResult = {
-  alreadyAnswered: AnswerToQuestion[];
+  previouslyAnswered: AnsweredQuestion[];
   questions: Question[];
   rootCauses: RootCause[];
 };
 
 type ProblemSolverInput = {
-  alreadyAnswered: AnswerToQuestion[];
-  thisAnswer: AnswerToQuestion;
+  previouslyAnswered: AnsweredQuestion[];
+  question: Question;
+  answer: Answer;
 };
 
 type ProblemSolver = {
