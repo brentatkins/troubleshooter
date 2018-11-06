@@ -20,15 +20,65 @@ describe("Problem solver", () => {
     });
   });
 
-  describe('when answering a question', () => {
-    it('should add the question to the list of already answered questions', () => {
+  describe("when answering a question", () => {
+    it("should add the question to the list of already answered questions", () => {
       const startResult = ProblemSolverActual.start();
       const question = startResult.questions[0];
-      
-      const actual = ProblemSolverActual.answer({alreadyAnswered: [], thisAnswer: {question, answer: 'Yes'}});
-      
+      const answer: Answer = "Yes";
+      const thisAnswer = { question, answer };
+      const actual = ProblemSolverActual.answer({
+        alreadyAnswered: [],
+        thisAnswer
+      });
+
       expect(actual.alreadyAnswered).toHaveLength(1);
-      expect(actual.alreadyAnswered[0]).toEqual(question);
-    })
+      expect(actual.alreadyAnswered[0]).toEqual({ question, answer });
+    });
+
+    it("should not include the question in the list of remaining questions", () => {
+      const startResult = ProblemSolverActual.start();
+      const question = startResult.questions[0];
+      const answer: Answer = "Yes";
+      const thisAnswer = { question, answer };
+      const actual = ProblemSolverActual.answer({
+        alreadyAnswered: [],
+        thisAnswer
+      });
+
+      expect(actual.questions).toHaveLength(9);
+      expect(actual.questions).not.toContain(question);
+    });
+
+    it("should not include questions answered in previous rounds", () => {
+      const startResult = ProblemSolverActual.start();
+      const answer: Answer = "Yes";
+      const result1 = ProblemSolverActual.answer({
+        alreadyAnswered: [],
+        thisAnswer: { question: startResult.questions[0], answer }
+      });
+      const result2 = ProblemSolverActual.answer({
+        alreadyAnswered: result1.alreadyAnswered,
+        thisAnswer: { question: result1.questions[0], answer }
+      });
+
+      expect(result2.questions).not.toContain(startResult.questions[0]);
+      expect(result2.questions).not.toContain(result1.questions[0]);
+      expect(result2.questions).toHaveLength(8);
+    });
+
+    it("should return all root causes with a liklehood", () => {
+      const startResult = ProblemSolverActual.start();
+      const answer: Answer = "Yes";
+      const result = ProblemSolverActual.answer({
+        alreadyAnswered: [],
+        thisAnswer: { question: startResult.questions[0], answer }
+      });
+
+      expect(result.rootCauses).toHaveLength(6);
+      result.rootCauses.forEach(x => {
+        expect(x.likelihood).toBeGreaterThanOrEqual(0);
+        expect(x.likelihood).toBeLessThanOrEqual(1);
+      });
+    });
   });
 });

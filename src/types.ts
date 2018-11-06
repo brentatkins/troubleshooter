@@ -1,9 +1,10 @@
 type Question = string;
 type Answer = "Yes" | "No" | "Maybe";
-type PossibleProblem = {
+type RootCause = {
   description: string;
-  likelihood: "Most likely" | "Likely" | "Not Possible";
+  likelihood: number;
 };
+
 type AnswerToQuestion = {
   question: Question;
   answer: Answer;
@@ -12,7 +13,7 @@ type AnswerToQuestion = {
 type ProblemSolverResult = {
   alreadyAnswered: AnswerToQuestion[];
   questions: Question[];
-  possibleProblems: PossibleProblem[];
+  rootCauses: RootCause[];
 };
 
 type ProblemSolverInput = {
