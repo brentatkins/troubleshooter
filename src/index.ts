@@ -1,3 +1,4 @@
 import ProblemSolver from "./problemSolver";
 
-console.warn({ ProblemSolver });
+const startResult = ProblemSolver.start();
+console.warn({ startResult });
