@@ -51,25 +51,22 @@ const ProblemSolverActual: ProblemSolver = {
 
   answer(input) {
     const data = getSetupData();
-
+    const allQuestions = Object.keys(data.questionsAndLikelihood);
     const previouslyAnswered = [
       ...input.previouslyAnswered,
       { question: input.question, answer: input.answer }
     ];
-    const allQuestions = Object.keys(data.questionsAndLikelihood);
     const remainingQuestions = allQuestions.filter(
-      x =>
-        x !== input.question &&
-        !input.previouslyAnswered.map(y => y.question).includes(x)
+      x => !previouslyAnswered.map(y => y.question).includes(x)
     );
 
     // build score matrix
     const scores = allQuestions.reduce((acc, q) => {
-      const answer = previouslyAnswered.find(a => a.question === q);
+      const answeredQ = previouslyAnswered.find(a => a.question === q);
       return {
         ...acc,
         [q]: data.questionsAndLikelihood[q].map(
-          (c: string) => (answer ? getScore(answer.answer, c) : 0)
+          (c: string) => (answeredQ ? getScore(answeredQ.answer, c) : 0)
         )
       };
     }, {});
